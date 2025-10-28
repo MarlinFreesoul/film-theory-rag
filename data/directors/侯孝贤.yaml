@@ -1,0 +1,117 @@
+# 侯孝贤导演画像
+# 来源：WP01 马尔可夫电影创作状态理论
+
+director_id: hou_hsiao_hsien
+name: 侯孝贤
+name_en: Hou Hsiao-hsien
+nationality: 中国台湾
+
+# 核心张力（第三结构 - 创作意图层）
+core_tension:
+  left: 静止
+  right: 流逝
+  alpha: 0.8  # 偏向静止侧
+  description: |
+    时间的双重性：静止的凝视与不可逆的流逝
+    侯孝贤的电影通过极度静止的画面（长镜头、固定机位）来凝视
+    时间的流逝，形成一种悖论式的张力。
+
+# 美学特征（第二结构 - 隐喻象征层）
+aesthetic_features:
+  visual:
+    - 长镜头
+    - 固定机位
+    - 景深构图
+    - 自然光线
+  auditory:
+    - 环境音
+    - 画外音
+    - 沉默的力量
+  spatial:
+    - 开放空间
+    - 日常场景
+    - 历史空间
+  temporal:
+    - 凝视时间
+    - 历史时间
+    - 生活流
+
+# 代表作品
+representative_works:
+  - title: 悲情城市
+    year: 1989
+    tension_manifestation:
+      visual: "固定长镜头展现林家客厅的'静止'"
+      temporal: "画外历史声音表现时代的'流逝'"
+      core: "在历史洪流中凝视个体命运"
+    structure_analysis:
+      L3_intention: "历史洪流中个体命运的静止与流逝"
+      L2_metaphor:
+        - "固定机位 = 凝视的静止"
+        - "画外声音 = 历史的流逝"
+      L1_narrative: "二二八事件前后林家四兄弟的命运变迁"
+
+  - title: 最好的时光
+    year: 2005
+    tension_manifestation:
+      visual: "三段式时空中的凝视"
+      temporal: "不同时代的情感流逝"
+      core: "在时间切片中捕捉永恒瞬间"
+    structure_analysis:
+      L3_intention: "时间流逝中寻找永恒的情感瞬间"
+      L2_metaphor:
+        - "撞球室的等待 = 青春的静止"
+        - "三个时代 = 时光的流逝"
+      L1_narrative: "三段不同时代的爱情故事"
+
+  - title: 刺客聂隐娘
+    year: 2015
+    tension_manifestation:
+      visual: "极简叙事与静态画面"
+      temporal: "历史时间与心理时间"
+      core: "在历史迷雾中凝视内心抉择"
+    structure_analysis:
+      L3_intention: "历史洪流中个体内心的静止与挣扎"
+      L2_metaphor:
+        - "山林静谧 = 内心平静"
+        - "刺杀任务 = 命运推动"
+      L1_narrative: "唐代女刺客的身份认同与道德抉择"
+
+# 创作风格标签
+style_tags:
+  - 长镜头美学
+  - 历史凝视
+  - 台湾新电影
+  - 诗意写实
+  - 时间哲学
+
+# 适合的创作者类型
+suitable_for_creators:
+  - 具有历史意识
+  - 喜欢沉思风格
+  - 视觉优先思维
+  - 追求诗意表达
+  - 耐心的观察者
+
+# 激发素材推荐策略
+stimulus_strategy:
+  when_similar_tension:
+    description: "当创作者的核心张力涉及'时间'、'历史'、'凝视'时"
+    recommend:
+      - type: visual
+        content: "侯孝贤电影中的固定长镜头片段"
+        reason: "展示如何通过静止表现流逝"
+      - type: text
+        content: "关于'凝视美学'的理论片段"
+        reason: "提供概念框架"
+  when_stagnation:
+    description: "当创作者在故事层卡住时"
+    recommend:
+      - type: visual
+        content: "《悲情城市》的叙事结构分析"
+        reason: "展示如何将抽象张力转化为具体故事"
+
+references:
+  - "朱天文. 《悲情城市》剧本. 远流出版, 1989."
+  - "焦雄屏. 《侯孝贤电影讲座》. 生活·读书·新知三联书店, 2009."
+  - "Working Paper 01: 马尔可夫电影创作状态理论"

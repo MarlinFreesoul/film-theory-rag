@@ -1,0 +1,121 @@
+# 三结构电影美学理论
+# 来源：三篇工作论文的理论基础
+
+theory_id: three_structure_aesthetics
+name: 三结构电影美学
+author: 基于结构主义电影理论
+description: |
+  三结构理论将电影文本分为三个层次：
+  - 第一结构（L1）：故事剧情层
+  - 第二结构（L2）：隐喻象征层
+  - 第三结构（L3）：创作意图层
+
+structures:
+  - level: L3
+    name: 第三结构
+    description: 创作意图层
+    elements:
+      - 导演核心张力
+      - 哲学命题
+      - 心境压缩
+      - 创作动机
+    examples:
+      - work: 悲情城市
+        director: 侯孝贤
+        core_tension: "静止 ↔ 流逝"
+        intention: "凝视历史洪流中个体命运的静止与流逝"
+      - work: 信条
+        director: 诺兰
+        core_tension: "秩序 ↔ 熵增"
+        intention: "探讨人类对抗熵增的秩序构建"
+      - work: 穆赫兰道
+        director: 林奇
+        core_tension: "表层 ↔ 潜意识"
+        intention: "揭示日常表象下的潜意识暗流"
+
+  - level: L2
+    name: 第二结构
+    description: 隐喻象征层
+    elements:
+      - 视觉隐喻
+      - 声音象征
+      - 空间隐喻
+      - 时间象征
+    examples:
+      - work: 悲情城市
+        director: 侯孝贤
+        metaphors:
+          - type: 空间隐喻
+            content: "固定机位长镜头 = 凝视的静止"
+          - type: 时间象征
+            content: "画外历史声音 = 不可逆的流逝"
+      - work: 盗梦空间
+        director: 诺兰
+        metaphors:
+          - type: 视觉隐喻
+            content: "陀螺旋转 = 现实的不确定性"
+          - type: 空间隐喻
+            content: "梦境层级 = 意识深度"
+
+  - level: L1
+    name: 第一结构
+    description: 故事剧情层
+    elements:
+      - 叙事结构
+      - 人物关系
+      - 情节发展
+      - 戏剧冲突
+    examples:
+      - work: 悲情城市
+        director: 侯孝贤
+        narrative: "林家四兄弟在二二八事件前后的命运变迁"
+      - work: 信条
+        director: 诺兰
+        narrative: "主角通过时间逆转拯救世界"
+
+# 三结构关联原理
+relationships:
+  - from: L3
+    to: L2
+    relation: "创作意图通过隐喻象征表达"
+    example: "侯孝贤的'静止↔流逝'张力通过固定长镜头实现"
+
+  - from: L2
+    to: L1
+    relation: "隐喻象征嵌入在故事剧情中"
+    example: "固定长镜头承载林家的日常叙事"
+
+  - from: L3
+    to: L1
+    relation: "创作意图最终落实为具体故事"
+    example: "历史洪流中的个体命运通过林家故事展现"
+
+# 应用于创作流的导航规则
+creative_navigation:
+  principle: |
+    创作者可以在三个结构层次间自由跳转，不必遵循线性流程。
+    AI系统应支持三重触发机制：
+    1. 创作者主动请求切换层次
+    2. AI检测到创作卡点，建议切换
+    3. 操作停滞检测，主动询问是否需要切换视角
+
+  typical_flows:
+    - name: "从意图到形式"
+      path: "L3 → L2 → L1"
+      description: "先明确核心张力，再寻找隐喻形式，最后构建故事"
+      suitable_for: "高级创作者，清晰的哲学追求"
+
+    - name: "从故事到深化"
+      path: "L1 → L2 → L3"
+      description: "先有故事想法，再挖掘隐喻，最后提炼意图"
+      suitable_for: "初级创作者，从具体到抽象"
+
+    - name: "从隐喻出发"
+      path: "L2 → L3 → L1"
+      description: "被某个意象触发，探索其哲学内涵，再构建故事"
+      suitable_for: "视觉优先的创作者"
+
+references:
+  - "Working Paper 01: 马尔可夫电影创作状态理论"
+  - "Working Paper 02: 认知共振理论与五阶段创作流"
+  - "Working Paper 03: 动态充分性与三维创作导航系统"

@@ -1,0 +1,318 @@
+# 五阶段创作流理论
+# 来源：WP02 认知共振理论与五阶段创作流
+
+theory_id: five_stage_creative_flow
+name: 五阶段创作流
+author: Marlin阿杰
+source: Working Paper 02
+
+description: |
+  五阶段创作流是AI辅助电影创作的过程模型，
+  将创作过程分解为五个可识别、可支持的阶段。
+  每个阶段都有明确的目标和AI支持策略。
+
+# 五个阶段详细定义
+stages:
+  - stage_id: clarification
+    name: 明确
+    name_en: Clarification
+    order: 1
+    goal: 明确核心张力与创作意图
+    description: |
+      创作的起点是明确"我想表达什么"。
+      这个阶段不追求具体，而是捕获最核心的张力和情感。
+
+    ai_support_strategies:
+      - strategy: 引导性提问
+        description: "通过开放式问题帮助创作者探索内心"
+        examples:
+          - "什么情绪/想法让你想创作这个故事？"
+          - "如果用两个相反的词描述你的感受，会是什么？"
+          - "你最想让观众体验到什么？"
+
+      - strategy: 张力识别
+        description: "从创作者的表述中识别核心张力对"
+        method: "提取高频概念，寻找对立关系"
+        example_output: "你提到了'连接'和'孤独'，这似乎是你的核心张力"
+
+      - strategy: 导演参考
+        description: "提供类似张力的导演作品作为参照"
+        example: "侯孝贤的'静止↔流逝'与你的感受有相似之处吗？"
+
+    success_criteria:
+      - 创作者能明确陈述核心张力
+      - 创作者对意图有清晰感受（即使无法完美表达）
+      - AI系统成功构建creator_profile的core_tension
+
+    typical_duration: "10-30分钟"
+
+    stagnation_signals:
+      - 创作者反复修改核心张力表述
+      - 创作者表示"说不清楚"
+      - 对话陷入抽象概念的循环
+
+    recovery_strategies:
+      - 切换到L2层次：从具体意象出发
+      - 提供多媒体激发：展示不同导演的核心张力
+      - 暂时跳到L1：从想讲的故事切入
+
+  - stage_id: focusing
+    name: 聚焦
+    name_en: Focusing
+    order: 2
+    goal: 将抽象意图聚焦到具体场景/情节
+    description: |
+      从抽象的张力转化为具体的创作对象。
+      "我要做一个什么样的故事/场景来表达这个张力？"
+
+    ai_support_strategies:
+      - strategy: 场景具化
+        description: "帮助创作者将张力转化为可视化场景"
+        examples:
+          - "你的'连接↔孤独'可以发生在什么场景？"
+          - "能想到一个代表'连接'的具体画面吗？"
+
+      - strategy: 作品片段参考
+        description: "提供相似张力的电影片段"
+        method: "从work_memory库中检索匹配的片段"
+        example: "《悲情城市》的这个长镜头如何表现'静止'？"
+
+      - strategy: 三结构对应
+        description: "建立L3意图与L2隐喻、L1故事的对应"
+        example: "'孤独'可以通过空间隐喻（封闭房间）在故事中表现"
+
+    success_criteria:
+      - 创作者有了初步的场景/故事想法
+      - 能描述至少一个具体画面或情节
+      - 张力与具体内容有清晰对应关系
+
+    typical_duration: "20-60分钟"
+
+    stagnation_signals:
+      - 提出的场景与核心张力脱节
+      - 场景描述过于宽泛
+      - 对具体化表示困难
+
+    recovery_strategies:
+      - 提供更多视觉参考
+      - 降低要求：从一个镜头开始，而非完整场景
+      - 切换到L1：先不管张力，想想故事
+
+  - stage_id: divergence
+    name: 发散
+    name_en: Divergence
+    order: 3
+    goal: 发散可能性，探索不同的表现方式
+    description: |
+      在聚焦的基础上，探索多种可能的实现方式。
+      "还可以怎样？有什么其他选择？"
+      这是最具创造性的阶段。
+
+    ai_support_strategies:
+      - strategy: 多模态激发
+        description: "提供图像、音频、视频、文本等多种激发"
+        method: "基于creator_profile的stimulus_preference动态配比"
+        example: |
+          视觉优先者(0.9) → 3个图像 + 1个视频 + 1段文字
+          听觉优先者(0.9) → 2段音乐 + 2个视频(声音为主) + 1个图像
+
+      - strategy: 变奏建议
+        description: "基于已有想法提供变体"
+        examples:
+          - "如果把场景从室内换到室外会怎样？"
+          - "如果用声音而非画面来表现这个张力呢？"
+          - "不同的光线会带来什么变化？"
+
+      - strategy: 跨导演参考
+        description: "展示不同导演如何处理类似张力"
+        example: |
+          "侯孝贤用长镜头表现'静止'，
+           诺兰用机械装置表现'秩序'，
+           你的'孤独'可以用什么来表现？"
+
+    success_criteria:
+      - 产生至少3-5个不同的创作方案
+      - 创作者感到思路被打开
+      - 不同方案有明显差异性
+
+    typical_duration: "30-90分钟"
+
+    stagnation_signals:
+      - 反复回到第一个想法
+      - 提出的方案过于相似
+      - 创作者表示"想不出更多了"
+
+    recovery_strategies:
+      - 增加多媒体激发的多样性
+      - 切换到不同结构层次
+      - 引入随机元素（"如果必须在水下拍呢？"）
+
+  - stage_id: convergence
+    name: 收束
+    name_en: Convergence
+    order: 4
+    goal: 从多个方案中选择最优方案
+    description: |
+      评估、比较、选择。
+      "哪个最能表达我的意图？"
+      需要理性判断与直觉感受的结合。
+
+    ai_support_strategies:
+      - strategy: 方案对比
+        description: "帮助创作者结构化比较不同方案"
+        method: "生成对比矩阵"
+        example: |
+          | 方案 | 张力表现度 | 可行性 | 个人感受 |
+          |------|-----------|--------|---------|
+          | A    | 高        | 中     | 强烈    |
+          | B    | 中        | 高     | 一般    |
+
+      - strategy: 充分性检验
+        description: "检验方案是否充分表达核心张力"
+        method: "将方案与L3意图对照"
+        example: "这个方案如何体现你的'连接↔孤独'张力？"
+
+      - strategy: 直觉确认
+        description: "引导创作者相信直觉"
+        examples:
+          - "闭上眼睛，哪个方案让你更兴奋？"
+          - "如果只能选一个，你的第一反应是什么？"
+
+    success_criteria:
+      - 选定至少一个核心方案
+      - 创作者能清晰说明选择理由
+      - 方案与核心张力高度契合
+
+    typical_duration: "15-45分钟"
+
+    stagnation_signals:
+      - 反复在两个方案间犹豫
+      - 试图融合所有方案（失去焦点）
+      - 对任何方案都不满意
+
+    recovery_strategies:
+      - 降低标准：选择"当前最好的"而非"完美的"
+      - 允许保留多个方案（平行推进）
+      - 回到L3：重新确认核心意图
+
+  - stage_id: organization
+    name: 整理
+    name_en: Organization
+    order: 5
+    goal: 将选定方案整理成完整结构
+    description: |
+      将碎片化的想法组织成完整的创作蓝图。
+      "如何把这些组织成一个完整的作品？"
+
+    ai_support_strategies:
+      - strategy: 结构化建议
+        description: "提供叙事结构模板"
+        examples:
+          - 三幕剧结构
+          - 序列式结构
+          - 循环式结构
+
+      - strategy: 三结构整合
+        description: "确保L1/L2/L3的一致性"
+        method: "生成三结构对应表"
+        example: |
+          L3: 连接↔孤独
+          L2: 空间隐喻（房间↔窗外）
+          L1: 主角在房间中的故事
+
+      - strategy: 完整性检验
+        description: "检查是否有遗漏或矛盾"
+        checklist:
+          - 核心张力是否贯穿始终？
+          - L2隐喻是否服务于L3意图？
+          - L1故事是否完整？
+
+    success_criteria:
+      - 有完整的创作蓝图/大纲
+      - 三结构对应清晰
+      - 创作者对下一步行动明确
+
+    typical_duration: "30-60分钟"
+
+    stagnation_signals:
+      - 结构过于复杂，失去焦点
+      - 三个层次之间矛盾
+      - 创作者对整体感到困惑
+
+    recovery_strategies:
+      - 简化结构
+      - 回到核心：保留最重要的元素
+      - 分阶段整理：先整理一部分
+
+# 阶段间流动规则
+flow_rules:
+  principle: |
+    五阶段不是严格线性的，创作者可以在阶段间自由移动。
+    AI应支持：
+    1. 前进：当阶段目标达成时
+    2. 后退：当发现前面阶段有问题时
+    3. 跳跃：当创作者主动请求时
+    4. 循环：小范围的迭代优化
+
+  typical_loops:
+    - loop: "明确 ⇄ 聚焦"
+      description: "在抽象与具体间反复"
+      trigger: "聚焦时发现核心张力不够清晰"
+
+    - loop: "发散 ⇄ 收束"
+      description: "探索与选择的迭代"
+      trigger: "收束时发现方案不够多"
+
+    - loop: "聚焦 → 发散 → 收束 → 聚焦"
+      description: "针对同一问题的迭代优化"
+      trigger: "对收束结果不满意，重新聚焦"
+
+# 慢协商设计原则（来自WP03）
+slow_negotiation:
+  philosophy: |
+    五阶段创作流体现了"慢协商"设计哲学：
+    - 不追求最快完成
+    - 给予充分思考时间
+    - 效率 = 减少迷茫 / 总时间
+
+  implementation:
+    - stage: 明确
+      slow_point: "允许创作者长时间探索内心，不催促"
+      fast_point: "快速提供参考张力，减少'不知如何表达'的迷茫"
+
+    - stage: 聚焦
+      slow_point: "在具体化前给予思考空间"
+      fast_point: "快速提供视觉参考，打破'想不出画面'的僵局"
+
+    - stage: 发散
+      slow_point: "鼓励充分探索，不急于收束"
+      fast_point: "快速提供多样激发，减少'灵感枯竭'的时间"
+
+    - stage: 收束
+      slow_point: "允许反复比较和犹豫"
+      fast_point: "快速呈现方案对比，减少'选择困难'的时间"
+
+    - stage: 整理
+      slow_point: "给予时间反思整体结构"
+      fast_point: "快速提供结构模板，减少'不知如何组织'的迷茫"
+
+# 与三结构理论的整合
+integration_with_three_structure:
+  principle: |
+    五阶段（横向）× 三结构（纵向）= 三维创作空间
+    创作者的位置可以表示为：(结构层次, 阶段, 进度)
+
+  examples:
+    - position: "(L3, 明确, 0.8)"
+      meaning: "在第三结构（意图层）的明确阶段，完成度80%"
+
+    - position: "(L2, 发散, 0.3)"
+      meaning: "在第二结构（隐喻层）的发散阶段，完成度30%"
+
+    - position: "(L1, 整理, 0.9)"
+      meaning: "在第一结构（故事层）的整理阶段，完成度90%"
+
+references:
+  - "Working Paper 02: 认知共振理论与五阶段创作流"
+  - "Working Paper 03: 动态充分性与三维创作导航系统"
+  - "Csikszentmihalyi, M. Flow: The Psychology of Optimal Experience. Harper & Row, 1990."

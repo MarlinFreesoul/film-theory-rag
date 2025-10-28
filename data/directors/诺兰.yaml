@@ -1,0 +1,147 @@
+# 克里斯托弗·诺兰导演画像
+# 来源：WP01 马尔可夫电影创作状态理论
+
+director_id: christopher_nolan
+name: 克里斯托弗·诺兰
+name_en: Christopher Nolan
+name_zh: 诺兰
+nationality: 英国/美国
+
+# 核心张力（第三结构 - 创作意图层）
+core_tension:
+  left: 秩序
+  right: 熵增
+  alpha: 0.5  # 平衡点
+  description: |
+    对抗熵增的秩序构建与必然崩溃
+    诺兰的电影探讨人类如何在熵增的宇宙中构建秩序，
+    以及这种秩序最终不可避免的崩溃。
+    α=0.5表示他在秩序与混沌之间寻找动态平衡。
+
+# 美学特征（第二结构 - 隐喻象征层）
+aesthetic_features:
+  visual:
+    - 对称构图
+    - 建筑空间
+    - 时间可视化
+    - 机械装置
+  auditory:
+    - Hans Zimmer的音乐
+    - 时钟滴答声
+    - 低频轰鸣
+  narrative:
+    - 非线性叙事
+    - 时间折叠
+    - 多线索并行
+    - 逆向叙事
+  conceptual:
+    - 时间哲学
+    - 记忆与现实
+    - 主观性探讨
+
+# 代表作品
+representative_works:
+  - title: 信条
+    title_en: Tenet
+    year: 2020
+    tension_manifestation:
+      visual: "时间逆转的视觉化"
+      conceptual: "熵增定律的物理表现"
+      core: "通过时间逆转对抗熵增"
+    structure_analysis:
+      L3_intention: "探讨人类对抗熵增的可能性与徒劳"
+      L2_metaphor:
+        - "时间逆转 = 反熵过程"
+        - "钳形攻势 = 秩序与混沌的同时作用"
+      L1_narrative: "主角通过时间逆转技术阻止第三次世界大战"
+
+  - title: 盗梦空间
+    title_en: Inception
+    year: 2010
+    tension_manifestation:
+      visual: "梦境层级的建筑化"
+      conceptual: "潜意识的结构化"
+      core: "在混沌的梦境中构建秩序"
+    structure_analysis:
+      L3_intention: "意识深处的秩序构建与崩溃"
+      L2_metaphor:
+        - "梦境建筑 = 意识的秩序化"
+        - "陀螺旋转 = 现实的不确定性"
+      L1_narrative: "盗梦团队通过植入想法改变目标人物"
+
+  - title: 星际穿越
+    title_en: Interstellar
+    year: 2014
+    tension_manifestation:
+      visual: "宇宙尺度的时空扭曲"
+      conceptual: "爱与科学的对立统一"
+      core: "在熵增的宇宙中寻找生存秩序"
+    structure_analysis:
+      L3_intention: "人类文明对抗宇宙熵增的挣扎"
+      L2_metaphor:
+        - "黑洞 = 熵的极致"
+        - "五维空间 = 超越时间的秩序"
+      L1_narrative: "父亲穿越时空拯救人类文明"
+
+  - title: 记忆碎片
+    title_en: Memento
+    year: 2000
+    tension_manifestation:
+      visual: "黑白与彩色的交替"
+      narrative: "逆向叙事结构"
+      core: "在记忆崩溃中重建身份秩序"
+    structure_analysis:
+      L3_intention: "记忆缺失导致的身份秩序崩溃"
+      L2_metaphor:
+        - "纹身与便条 = 记忆的外化秩序"
+        - "逆向叙事 = 观众体验主角的困境"
+      L1_narrative: "失忆者追寻杀害妻子的凶手"
+
+# 创作风格标签
+style_tags:
+  - 时间哲学
+  - 非线性叙事
+  - 高概念科幻
+  - 建筑化空间
+  - 智力悬疑
+
+# 适合的创作者类型
+suitable_for_creators:
+  - 喜欢逻辑推理
+  - 对时间哲学感兴趣
+  - 概念优先思维
+  - 追求叙事创新
+  - 理性思考者
+
+# 激发素材推荐策略
+stimulus_strategy:
+  when_similar_tension:
+    description: "当创作者的核心张力涉及'秩序'、'混沌'、'时间'时"
+    recommend:
+      - type: visual
+        content: "诺兰电影中的对称构图片段"
+        reason: "展示如何通过视觉构建秩序感"
+      - type: conceptual
+        content: "熵增定律的通俗解释"
+        reason: "提供理论基础"
+      - type: auditory
+        content: "《信条》的配乐片段（正向与逆向音乐）"
+        reason: "展示声音如何表现时间逆转"
+  when_narrative_stuck:
+    description: "当创作者在叙事结构上遇到困难时"
+    recommend:
+      - type: text
+        content: "《记忆碎片》的逆向叙事结构分析"
+        reason: "提供非线性叙事的范例"
+
+# 核心哲学命题
+philosophical_propositions:
+  - "人类能否对抗宇宙的熵增？"
+  - "记忆与身份的关系是什么？"
+  - "时间是否可逆？"
+  - "现实与梦境的边界在哪里？"
+
+references:
+  - "Nolan, Christopher. The Nolan Variations. Knopf, 2020."
+  - "Working Paper 01: 马尔可夫电影创作状态理论"
+  - "Working Paper 03: 动态充分性与三维创作导航系统"
