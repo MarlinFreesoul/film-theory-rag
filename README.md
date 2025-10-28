@@ -1,201 +1,99 @@
 # Film Theory RAG Knowledge Base
 
-> 电影学理论研究与RAG知识库构建项目
+电影理论RAG知识库 - AI辅助电影创作系统的理论基础与实现
 
-## 📖 项目简介
+> **作者**: Marlin阿杰
+> **理论基础**: 三篇工作论文 ([Working Papers](./research/papers/))
+> **当前版本**: v0.1.0
 
-本项目致力于构建一个系统化的电影学理论知识库，基于结构主义电影学、符号学、叙事学等核心理论，采用RAG（Retrieval-Augmented Generation）技术架构，为电影研究、教学和创作提供学术级知识检索与分析支持。
+## 项目概述
 
-## 🎯 项目目标
+本项目是一个基于RAG（Retrieval-Augmented Generation）架构的电影理论知识库，旨在为AI辅助电影创作提供理论支持和实现框架。
 
-- 🔬 **理论体系化**：梳理结构主义电影学、符号学、叙事学等核心理论脉络
-- 📚 **知识库建设**：构建包含94+篇学术文献的电影理论知识库
-- 🤖 **RAG系统**：开发基于向量数据库的智能检索与生成系统
-- 🎓 **学术规范**：所有研究遵循核心期刊标准，标注完整文献来源
+### 核心理论基础
 
-## 📂 项目结构
+1. **[Working Paper 01](./research/papers/01-马尔可夫电影创作状态理论.md)**: 马尔可夫电影创作状态理论
+   - 三状态模型（原型/当前/投射）
+   - 导演核心张力的压缩表示（α系数）
+   - ACE框架的马尔可夫实现
 
-```
-film-theory-rag/
-├── research/              # 研究论文与成果
-│   └── papers/           # 学术论文
-│       └── 三结构电影美学理论研究综述.md
-├── docs/                 # 理论文档
-│   └── theory/          # 电影理论原始资料
-│       └── 三结构电影美学.md
-├── knowledge-base/       # 知识库
-│   ├── structuralism/   # 结构主义理论
-│   └── semiotics/       # 符号学理论
-├── rag-system/          # RAG系统架构
-│   └── architecture/    # 系统架构设计
-├── references/          # 参考文献库
-└── README.md
+2. **[Working Paper 02](./research/papers/02-认知共振理论与五阶段创作流.md)**: 认知共振理论与五阶段创作流
+   - AI与人类的对称共振关系
+   - 五阶段创作流（明确→聚焦→发散→收束→整理）
+   - 按智分配的协作哲学
+   - 多模态激发理论
 
-```
+3. **[Working Paper 03](./research/papers/03-动态充分性与三维创作导航系统.md)**: 动态充分性与三维创作导航系统
+   - 动态充分性原则（关系性而非绝对）
+   - 三维创作空间导航（结构×阶段×进度）
+   - 三重触发机制（主动/卡点/停滞）
+   - 慢协商设计哲学
 
-## 🏗️ 核心理论框架
+## 快速开始
 
-### 三结构电影美学体系
-
-基于结构主义电影学的分析框架，将电影美学划分为三个层次：
-
-#### 🎬 第三结构：创作意图层面
-- **作者论（Auteur Theory）**：导演的创作风格与个人标识
-- **意识形态批评（Ideological Critique）**：电影的社会文化意涵
-- **风格与母题（Style & Motif）**：重复出现的视觉/叙事元素
-
-#### 🎨 第二结构：隐喻象征层面
-- **场面调度（Mise-en-Scène）**：画框内事物的空间安排
-- **美术设计（Production Design）**：场景、服装、化妆等视觉造型
-
-#### 📝 第一结构：故事剧情层面
-- **剧作理论（Screenwriting）**：叙事结构、主题、人物性格
-- **摄影理论（Cinematography）**：光影、色彩、构图、摄法
-- **声音理论（Sound Theory）**：对白、音乐、音效的叙事功能
-- **蒙太奇理论（Montage）**：镜头组合与意义生成
-- **表演理论（Performance）**：演员的表演观念与程式
-- **叙事理论（Narrative）**：故事结构与讲述方式
-
-## 📊 研究成果
-
-### 已完成
-
-- ✅ 结构主义电影学理论系统梳理
-- ✅ 94篇学术文献的查阅与整理
-- ✅ 《三结构电影美学理论研究综述》（15000+字）
-- ✅ 完整参考文献体系（符合GB/T 7714-2015标准）
-
-### 进行中
-
-- 🔄 知识库向量化处理
-- 🔄 RAG系统架构设计
-- 🔄 电影理论概念图谱构建
-
-## 🚀 快速开始
-
-### 1. 克隆仓库
+### 1. 安装依赖
 
 ```bash
-git clone https://github.com/MarlinFreesoul/film-theory-rag.git
-cd film-theory-rag
+pip install -r requirements.txt
 ```
 
-### 2. 阅读研究成果
-
-查看核心研究论文：
+### 2. 启动API服务
 
 ```bash
-# 三结构电影美学理论研究综述
-cat research/papers/三结构电影美学理论研究综述.md
-
-# 三结构电影美学原始理论
-cat docs/theory/三结构电影美学.md
+python backend/api/query_interface.py
 ```
 
-### 3. 探索知识库
+服务将在 `http://localhost:8000` 启动
 
-知识库按理论流派组织，包括：
-- 结构主义（Structuralism）
-- 符号学（Semiotics）
-- 叙事学（Narratology）
-- 作者论（Auteur Theory）
-- 意识形态批评（Ideological Critique）
+### 3. 查看API文档
 
-## 🔧 技术栈（规划中）
+访问 `http://localhost:8000/docs` 查看交互式API文档
 
-### RAG系统架构
-
-- **向量数据库**：Milvus / Pinecone / Qdrant
-- **嵌入模型**：OpenAI Embeddings / BGE / M3E
-- **检索框架**：LangChain / LlamaIndex
-- **生成模型**：GPT-4 / Claude / 文心一言
-- **前端界面**：Streamlit / Gradio
-
-### 数据处理
-
-- **文本分块**：RecursiveCharacterTextSplitter
-- **元数据管理**：作者、年份、期刊、引用次数
-- **知识图谱**：Neo4j（电影理论概念关系网络）
-
-## 📚 核心文献
-
-### 重要理论家
-
-- **Christian Metz**（克里斯蒂安·梅茨）：电影符号学
-- **André Bazin**（安德烈·巴赞）：场面调度理论、长镜头理论
-- **Sergei Eisenstein**（谢尔盖·爱森斯坦）：蒙太奇理论
-- **François Truffaut**（弗朗索瓦·特吕弗）：作者论
-- **Ferdinand de Saussure**（费迪南德·德·索绪尔）：结构主义语言学
-- **Claude Lévi-Strauss**（克劳德·列维-斯特劳斯）：结构人类学
-
-### 经典著作
-
-- Metz, C. (1974). *Film Language: A Semiotics of the Cinema*
-- Bazin, A. (1967). *What is Cinema?*
-- Eisenstein, S. (1949). *Film Form: Essays in Film Theory*
-- Field, S. (2005). *Screenplay: The Foundations of Screenwriting*
-- McKee, R. (1997). *Story: Substance, Structure, Style*
-
-## 🤝 贡献指南
-
-欢迎电影学研究者、开发者、学生参与贡献！
-
-### 贡献方式
-
-1. **理论研究**：补充电影理论文献、撰写综述
-2. **知识库建设**：添加新的理论分类、整理文献资料
-3. **系统开发**：参与RAG系统的设计与实现
-4. **文档完善**：改进项目文档、翻译外文资料
-
-### 贡献流程
+### 4. 运行测试
 
 ```bash
-# 1. Fork本仓库
-# 2. 创建特性分支
-git checkout -b feature/your-feature-name
-
-# 3. 提交更改
-git commit -m "Add: 添加XXX理论文献"
-
-# 4. 推送到分支
-git push origin feature/your-feature-name
-
-# 5. 创建Pull Request
+# 确保API服务已启动
+python tests/test_api.py
 ```
 
-## 📝 学术规范
+## 核心功能
 
-本项目严格遵循学术规范：
+### 三大知识库模块
 
-- ✅ 所有理论论述均标注文献来源
-- ✅ 参考文献遵循GB/T 7714-2015标准
-- ✅ 引用采用顺序编码制
-- ✅ 网络文献注明访问日期
-- ✅ 学术专著优先引用原版或权威译本
+1. **理论状态库**: 导演核心张力、三结构理论、理论概念
+2. **作品记忆库**: 多媒体片段、张力关联、多维检索
+3. **创作者状态库**: 三维位置追踪、激发偏好、状态管理
 
-## 📧 联系方式
+### 三重触发机制
 
-- **GitHub**: [@MarlinFreesoul](https://github.com/MarlinFreesoul)
-- **Email**: 欢迎通过GitHub Issues讨论
+1. 创作者主动请求
+2. AI卡点检测（≥3次）
+3. 操作停滞检测（≥120秒）
 
-## 📄 许可证
+### 动态充分性计算
 
-本项目采用 [MIT License](LICENSE)
+基于创作者画像动态判断激发是否充分（关系性而非绝对）
 
-## 🌟 致谢
+## 已收录数据
 
-感谢所有电影理论研究者的学术贡献，特别是：
-- 结构主义电影学派
-- 《电影手册》（Cahiers du Cinéma）团队
-- 国内外电影学术期刊
+- **导演**: 侯孝贤、诺兰（含核心张力与代表作分析）
+- **理论**: 三结构理论、五阶段创作流
+- **作品**: 7部代表作的三结构分析
+
+## 文档
+
+- [知识库详细文档](./docs/KNOWLEDGE_BASE.md)
+- [API文档](./backend/api/README.md)
+- [工作论文](./research/papers/)
+
+## 技术栈
+
+Python 3.8+ · FastAPI · Pydantic · YAML · ChromaDB(计划)
+
+## 许可证
+
+MIT License
 
 ---
 
-**建设中的功能**：
-- [ ] RAG检索系统
-- [ ] 知识图谱可视化
-- [ ] 多语言支持（中英文）
-- [ ] 批注与讨论功能
-- [ ] 影片案例分析库
-
-**最后更新**：2025-01-28
+**Powered by**: 马尔可夫思维 × 认知共振理论 × 动态充分性原则
