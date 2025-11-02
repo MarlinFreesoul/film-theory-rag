@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影理论激发系统 - 多轮对话</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* 左侧对话区域 */
+        .dialogue-panel {
+            flex: 0 0 500px;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dialogue-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dialogue-header h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .dialogue-header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .dialogue-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .dialogue-turn {
+            margin-bottom: 25px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .turn-number {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .turn-number::before {
+            content: "●";
+            color: #667eea;
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .user-message {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+        }
+
+        .user-message-label {
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-message-text {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .system-analysis {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .analysis-item {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 5px;
+        }
+
+        .analysis-label {
+            color: #666;
+        }
+
+        .analysis-value {
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        /* 引导问题区域 */
+        .guiding-questions {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-top: 2px solid #e0e0e0;
+            border-bottom: 2px solid #e0e0e0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .guiding-questions.active {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .guiding-header {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .guiding-header::before {
+            content: "💡";
+            margin-right: 6px;
+            font-size: 1.2em;
+        }
+
+        .question-card {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .question-card:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .question-text {
+            font-size: 0.95em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .question-purpose {
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        /* 视觉化场景 */
+        .visual-scenes {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 100%);
+            border-top: 2px solid #f0c080;
+            border-bottom: 2px solid #f0c080;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            position: relative;
+            z-index: 9;
+        }
+
+        .visual-scenes.active {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .visual-header {
+            font-size: 1em;
+            color: #d97706;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .scene-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+        }
+
+        .scene-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #d97706;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scene-tension {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .scene-section {
+            margin-bottom: 10px;
+        }
+
+        .scene-label {
+            font-size: 0.8em;
+            color: #92400e;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scene-content {
+            font-size: 0.95em;
+            color: #333;
+            line-height: 1.6;
+            padding: 8px 12px;
+            background: #fef9f3;
+            border-radius: 6px;
+        }
+
+        .scene-duration {
+            display: inline-block;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .scene-purpose {
+            background: #e0f2fe;
+            color: #075985;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 10px;
+            border-left: 3px solid #0ea5e9;
+        }
+
+        /* 输入区域 */
+        .dialogue-input {
+            padding: 20px;
+            background: white;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            resize: none;
+            height: 80px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-send {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-new-session {
+            padding: 8px 16px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-new-session:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* 右侧激发看板 */
+        .inspiration-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .inspiration-header {
+            padding: 25px;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .inspiration-header h2 {
+            font-size: 1.5em;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .inspiration-header h2::before {
+            content: "💡";
+            margin-right: 10px;
+        }
+
+        .inspiration-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .inspiration-board {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .inspiration-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .inspiration-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .inspiration-type {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .type-theory {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .type-work {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .inspiration-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .inspiration-content {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #555;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            white-space: pre-line;
+            margin: 12px 0;
+        }
+
+        .inspiration-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .relevance-score {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: #666;
+        }
+
+        /* 加载状态 */
+        .loading-indicator {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            display: none;
+        }
+
+        .loading-indicator.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        /* 用量看板 */
+        .usage-panel {
+            background: white;
+            border-top: 2px solid #e0e0e0;
+            padding: 15px 25px;
+        }
+
+        .usage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 5px 0;
+        }
+
+        .usage-header h3 {
+            font-size: 1.1em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .usage-toggle {
+            color: #667eea;
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .usage-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .usage-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .usage-content.expanded {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .usage-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .usage-stat-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .usage-stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .usage-stat-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .usage-cost-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .usage-cost-highlight .cost-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .usage-cost-highlight .cost-value {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .usage-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-usage {
+            flex: 1;
+            padding: 8px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-usage:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .usage-detail {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .usage-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧对话区域 -->
+        <div class="dialogue-panel">
+            <div class="dialogue-header">
+                <h1>🎬 创作对话</h1>
+                <p>与系统探索你的创作想法</p>
+            </div>
+
+            <div class="dialogue-history" id="dialogueHistory">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <div class="empty-state-text">开始你的创作探索吧！<br>输入你的想法，系统会帮你分析和激发灵感</div>
+                </div>
+            </div>
+
+            <!-- 引导问题区域 -->
+            <div class="guiding-questions" id="guidingQuestions">
+                <div class="guiding-header">系统建议</div>
+                <div id="questionsContainer"></div>
+            </div>
+
+            <!-- 视觉化场景（核心激发） -->
+            <div class="visual-scenes" id="visualScenes">
+                <div class="visual-header">🎬 场景激发</div>
+                <div id="scenesContainer"></div>
+            </div>
+
+            <div class="dialogue-input">
+                <textarea
+                    id="userInput"
+                    class="input-box"
+                    placeholder="输入你的创作想法..."
+                ></textarea>
+                <div class="input-actions">
+                    <button id="newSessionBtn" class="btn-new-session">🔄 新对话</button>
+                    <button id="sendBtn" class="btn-send">发送 ✨</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧激发看板 -->
+        <div class="inspiration-panel">
+            <div class="inspiration-header">
+                <h2>灵感看板</h2>
+                <div class="inspiration-stats" id="stats">
+                    <span class="stat-item">等待输入...</span>
+                </div>
+            </div>
+
+            <div class="inspiration-board" id="inspirationBoard">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎨</div>
+                    <div class="empty-state-text">
+                        灵感将在这里展示<br>
+                        包括相关的电影理论和作品参考
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading-indicator" id="loading">
+                <div class="spinner"></div>
+                <p>正在为你寻找灵感...</p>
+            </div>
+
+            <!-- 用量看板 -->
+            <div class="usage-panel">
+                <div class="usage-header" onclick="toggleUsage()">
+                    <h3>
+                        <span>💰</span>
+                        <span>LLM用量统计</span>
+                    </h3>
+                    <span class="usage-toggle" id="usageToggle">▼</span>
+                </div>
+
+                <div class="usage-content" id="usageContent">
+                    <div class="usage-stats-grid" id="usageStats">
+                        <div class="usage-stat-card">
+                            <div class="usage-stat-label">总调用次数</div>
+                            <div class="usage-stat-value" id="totalCalls">0</div>
+                        </div>
+                        <div class="usage-stat-card">
+                            <div class="usage-stat-label">总Token数</div>
+                            <div class="usage-stat-value" id="totalTokens">0</div>
+                        </div>
+                    </div>
+
+                    <div class="usage-cost-highlight">
+                        <div class="cost-label">累计成本</div>
+                        <div class="cost-value" id="totalCost">$0.0000</div>
+                    </div>
+
+                    <div class="usage-detail" id="usageDetail">
+                        <div class="usage-detail-item">
+                            <span>输入tokens:</span>
+                            <span id="inputTokens">0</span>
+                        </div>
+                        <div class="usage-detail-item">
+                            <span>输出tokens:</span>
+                            <span id="outputTokens">0</span>
+                        </div>
+                        <div class="usage-detail-item">
+                            <span>平均每次调用:</span>
+                            <span id="avgCost">$0.0000</span>
+                        </div>
+                    </div>
+
+                    <div class="usage-actions">
+                        <button class="btn-usage" onclick="refreshUsage()">🔄 刷新</button>
+                        <button class="btn-usage" onclick="resetUsage()">🗑️ 重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8001';
+        let currentSessionId = null;
+        let turnCount = 0;
+
+        // 发送消息
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput').value.trim();
+            if (!userInput) {
+                alert('请输入你的想法');
+                return;
+            }
+
+            // 禁用输入
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('userInput').disabled = true;
+
+            // 显示加载状态
+            document.getElementById('loading').classList.add('active');
+
+            try {
+                const response = await fetch(`${API_URL}/inspire`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_input: userInput,
+                        session_id: currentSessionId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`服务器错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // 更新会话ID
+                currentSessionId = data.session_id;
+                turnCount = data.turn_number;
+
+                // 添加对话轮次
+                addDialogueTurn(userInput, data.state);
+
+                // 更新激发看板
+                updateInspirationBoard(data.inspirations, data.total_count, data.state);
+
+                // 显示引导问题（新增）
+                updateGuidingQuestions(data.guiding_questions || []);
+
+                // 显示视觉化场景（核心功能）
+                updateVisualScenes(data.visual_scenes || []);
+
+                // 清空输入框
+                document.getElementById('userInput').value = '';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`出错了：${error.message}\n\n请确保后端服务器正在运行`);
+            } finally {
+                // 恢复输入
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('userInput').disabled = false;
+                document.getElementById('userInput').focus();
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // 添加对话轮次
+        function addDialogueTurn(userInput, state) {
+            const history = document.getElementById('dialogueHistory');
+
+            // 移除空状态
+            const emptyState = history.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            const turnHtml = `
+                <div class="dialogue-turn">
+                    <div class="turn-number">第 ${turnCount} 轮对话</div>
+                    <div class="user-message">
+                        <div class="user-message-label">你说：</div>
+                        <div class="user-message-text">${userInput}</div>
+                    </div>
+                    <div class="system-analysis">
+                        <span class="analysis-item">
+                            <span class="analysis-label">阶段：</span>
+                            <span class="analysis-value">${state.stage}</span>
+                        </span>
+                        <span class="analysis-item">
+                            <span class="analysis-label">关键词：</span>
+                            <span class="analysis-value">${state.keywords.join(', ')}</span>
+                        </span>
+                        <span class="analysis-item">
+                            <span class="analysis-label">进度：</span>
+                            <span class="analysis-value">${(state.progress * 100).toFixed(0)}%</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            history.insertAdjacentHTML('beforeend', turnHtml);
+
+            // 滚动到底部
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // 更新激发看板
+        function updateInspirationBoard(inspirations, totalCount, state) {
+            const board = document.getElementById('inspirationBoard');
+            const stats = document.getElementById('stats');
+
+            // 更新统计
+            stats.innerHTML = `
+                <span class="stat-item">第 ${turnCount} 轮</span>
+                <span class="stat-item">关键词: ${state.keywords.join(', ')}</span>
+                <span class="stat-item">找到 ${totalCount} 个激发</span>
+            `;
+
+            // 更新看板
+            if (inspirations.length === 0) {
+                board.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤔</div>
+                        <div class="empty-state-text">暂时没有找到相关灵感<br>试试换个关键词？</div>
+                    </div>
+                `;
+                return;
+            }
+
+            board.innerHTML = inspirations.map(insp => `
+                <div class="inspiration-card">
+                    <div class="inspiration-type type-${insp.type}">
+                        ${insp.type === 'theory' ? '📚 理论' : '🎬 作品'}
+                    </div>
+                    <div class="inspiration-title">${insp.title}</div>
+                    <div class="inspiration-content">${insp.content}</div>
+                    <div class="inspiration-footer">
+                        <span>${insp.source}</span>
+                        <span class="relevance-score">相关度: ${(insp.relevance_score * 100).toFixed(0)}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 新对话
+        function startNewSession() {
+            if (turnCount > 0) {
+                const confirm = window.confirm('确定要开始新对话吗？当前对话记录将清空。');
+                if (!confirm) return;
+            }
+
+            currentSessionId = null;
+            turnCount = 0;
+
+            // 清空对话历史
+            document.getElementById('dialogueHistory').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <div class="empty-state-text">开始你的创作探索吧！<br>输入你的想法，系统会帮你分析和激发灵感</div>
+                </div>
+            `;
+
+            // 清空看板
+            document.getElementById('inspirationBoard').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎨</div>
+                    <div class="empty-state-text">
+                        灵感将在这里展示<br>
+                        包括相关的电影理论和作品参考
+                    </div>
+                </div>
+            `;
+
+            // 重置统计
+            document.getElementById('stats').innerHTML = '<span class="stat-item">等待输入...</span>';
+
+            // 清空引导问题（新增）
+            updateGuidingQuestions([]);
+
+            // 聚焦输入框
+            document.getElementById('userInput').focus();
+        }
+
+        // 事件监听
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('newSessionBtn').addEventListener('click', startNewSession);
+
+        // 更新引导问题（新增）
+        function updateGuidingQuestions(questions) {
+            const container = document.getElementById('questionsContainer');
+            const guidingPanel = document.getElementById('guidingQuestions');
+
+            // 如果没有问题，隐藏面板
+            if (!questions || questions.length === 0) {
+                guidingPanel.classList.remove('active');
+                container.innerHTML = '';
+                return;
+            }
+
+            // 显示面板
+            guidingPanel.classList.add('active');
+
+            // 渲染问题卡片
+            container.innerHTML = questions.map(q => `
+                <div class="question-card" onclick="fillQuestion('${q.question.replace(/'/g, "\\'")}')">
+                    <div class="question-text">${q.question}</div>
+                    <div class="question-purpose">${q.purpose}</div>
+                </div>
+            `).join('');
+        }
+
+        // 点击问题填充到输入框
+        function fillQuestion(question) {
+            const input = document.getElementById('userInput');
+            input.value = question;
+            input.focus();
+        }
+
+        // 更新视觉化场景（核心激发功能）
+        function updateVisualScenes(scenes) {
+            const container = document.getElementById('scenesContainer');
+            const visualPanel = document.getElementById('visualScenes');
+
+            // 如果没有场景，隐藏面板
+            if (!scenes || scenes.length === 0) {
+                visualPanel.classList.remove('active');
+                container.innerHTML = '';
+                return;
+            }
+
+            // 显示面板
+            visualPanel.classList.add('active');
+
+            // 渲染场景卡片
+            container.innerHTML = scenes.map(scene => `
+                <div class="scene-card">
+                    <div class="scene-title">
+                        ${scene.title}
+                        <span class="scene-tension">${scene.tension}</span>
+                    </div>
+
+                    <div class="scene-section">
+                        <div class="scene-label">🎥 画面</div>
+                        <div class="scene-content">${scene.visual}</div>
+                    </div>
+
+                    <div class="scene-section">
+                        <div class="scene-label">🔊 声音</div>
+                        <div class="scene-content">${scene.sound}</div>
+                        <span class="scene-duration">⏱ ${scene.duration}</span>
+                    </div>
+
+                    <div class="scene-purpose">
+                        💡 ${scene.purpose}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 支持Ctrl+Enter发送
+        document.getElementById('userInput').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // 自动聚焦
+        document.getElementById('userInput').focus();
+
+        // ========== 用量统计功能 ==========
+
+        // 切换用量面板
+        function toggleUsage() {
+            const content = document.getElementById('usageContent');
+            const toggle = document.getElementById('usageToggle');
+
+            content.classList.toggle('expanded');
+            toggle.classList.toggle('expanded');
+
+            // 如果展开，自动刷新数据
+            if (content.classList.contains('expanded')) {
+                refreshUsage();
+            }
+        }
+
+        // 刷新用量统计
+        async function refreshUsage() {
+            try {
+                const response = await fetch(`${API_URL}/usage`);
+                const data = await response.json();
+
+                // 更新显示
+                document.getElementById('totalCalls').textContent = data.total_calls;
+                document.getElementById('totalTokens').textContent = data.total_tokens.toLocaleString();
+                document.getElementById('totalCost').textContent = `$${data.total_cost_usd.toFixed(6)}`;
+                document.getElementById('inputTokens').textContent = data.total_input_tokens.toLocaleString();
+                document.getElementById('outputTokens').textContent = data.total_output_tokens.toLocaleString();
+                document.getElementById('avgCost').textContent = `$${data.avg_cost_per_call.toFixed(6)}`;
+
+            } catch (error) {
+                console.error('获取用量统计失败:', error);
+            }
+        }
+
+        // 重置用量统计
+        async function resetUsage() {
+            if (!confirm('确定要重置用量统计吗？此操作不可恢复。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/usage/reset`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('用量统计已重置');
+                    refreshUsage();
+                }
+            } catch (error) {
+                console.error('重置用量统计失败:', error);
+                alert('重置失败，请检查服务器连接');
+            }
+        }
+
+        // 每次发送消息后自动刷新用量
+        const originalSendMessage = sendMessage;
+        sendMessage = async function() {
+            await originalSendMessage();
+            // 延迟一点再刷新，确保后端已记录
+            setTimeout(refreshUsage, 500);
+        }
+
+        // 页面加载时获取一次用量
+        refreshUsage();
+    </script>
+</body>
+</html>

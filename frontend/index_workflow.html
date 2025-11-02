@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影理论激发系统 - 工作流画板</title>
+
+    <!-- 引入 AntV X6 -->
+    <script src="https://cdn.jsdelivr.net/npm/@antv/x6@2.18.1/dist/x6.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 左侧输入面板 */
+        .input-panel {
+            width: 350px;
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .panel-header h1 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .panel-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .input-area {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        #userInput {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e5;
+        }
+
+        .status-info {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .status-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 右侧画布区域 */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: #fafafa;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 工具栏 */
+        .toolbar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: #e5e5e5;
+            transform: scale(1.1);
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e5e5;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 图例 */
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            z-index: 5;
+        }
+
+        .legend-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧输入面板 -->
+        <div class="input-panel">
+            <div class="panel-header">
+                <h1>🎬 电影理论激发系统</h1>
+                <p>基于工作流的创作激发画板</p>
+            </div>
+
+            <div class="input-area">
+                <div class="input-group">
+                    <div class="input-label">创作想法</div>
+                    <textarea
+                        id="userInput"
+                        placeholder="输入你的电影创作想法...&#10;例如：我想拍一部关于记忆的电影"
+                    ></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" id="clearBtn">清空画布</button>
+                    <button class="btn btn-primary" id="sendBtn">生成激发</button>
+                </div>
+
+                <div class="status-info">
+                    <div class="status-item">
+                        <span>会话ID</span>
+                        <span class="status-value" id="sessionId">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span>轮次</span>
+                        <span class="status-value" id="turnNumber">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span>创作阶段</span>
+                        <span class="status-value" id="stage">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span>节点数量</span>
+                        <span class="status-value" id="nodeCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧画布区域 -->
+        <div class="canvas-container">
+            <div id="graph-container"></div>
+
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <button class="tool-btn" id="zoomInBtn" title="放大">+</button>
+                <button class="tool-btn" id="zoomOutBtn" title="缩小">-</button>
+                <button class="tool-btn" id="fitBtn" title="适应画布">⊡</button>
+                <button class="tool-btn" id="centerBtn" title="居中">⊙</button>
+            </div>
+
+            <!-- 图例 -->
+            <div class="legend">
+                <div class="legend-title">节点类型</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    <span>用户输入</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>关键词</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>理论激发</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b5cf6;"></div>
+                    <span>作品参考</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>视觉场景</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>引导问题</span>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-overlay" id="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8001';
+        let graph = null;
+        let currentSessionId = null;
+        let nodeIdCounter = 0;
+
+        // 初始化画布
+        function initGraph() {
+            const container = document.getElementById('graph-container');
+
+            graph = new X6.Graph({
+                container: container,
+                width: container.clientWidth,
+                height: container.clientHeight,
+                background: {
+                    color: '#fafafa',
+                },
+                grid: {
+                    size: 10,
+                    visible: true,
+                    type: 'dot',
+                    args: {
+                        color: '#e5e5e5',
+                        thickness: 1,
+                    },
+                },
+                panning: {
+                    enabled: true,
+                    modifiers: 'shift',
+                },
+                mousewheel: {
+                    enabled: true,
+                    modifiers: ['ctrl', 'meta'],
+                },
+                connecting: {
+                    snap: true,
+                    allowBlank: false,
+                    allowLoop: false,
+                    highlight: true,
+                    connector: 'smooth',
+                    router: {
+                        name: 'er',
+                    },
+                },
+            });
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', () => {
+                graph.resize(container.clientWidth, container.clientHeight);
+            });
+
+            console.log('[Graph] Initialized');
+        }
+
+        // 节点样式配置
+        const nodeStyles = {
+            input: {
+                fill: '#667eea',
+                stroke: '#764ba2',
+            },
+            keyword: {
+                fill: '#10b981',
+                stroke: '#059669',
+            },
+            theory: {
+                fill: '#3b82f6',
+                stroke: '#2563eb',
+            },
+            work: {
+                fill: '#8b5cf6',
+                stroke: '#7c3aed',
+            },
+            scene: {
+                fill: '#f59e0b',
+                stroke: '#d97706',
+            },
+            question: {
+                fill: '#ef4444',
+                stroke: '#dc2626',
+            },
+        };
+
+        // 创建节点
+        function createNode(type, data, position) {
+            const style = nodeStyles[type];
+            const nodeId = `node_${++nodeIdCounter}`;
+
+            let label = '';
+            let size = { width: 200, height: 80 };
+
+            switch(type) {
+                case 'input':
+                    label = `输入\n${data.text}`;
+                    size = { width: 250, height: 100 };
+                    break;
+                case 'keyword':
+                    label = `关键词\n${data.keywords.join(', ')}`;
+                    size = { width: 220, height: 80 };
+                    break;
+                case 'theory':
+                    label = `理论\n${data.title}`;
+                    size = { width: 200, height: 100 };
+                    break;
+                case 'work':
+                    label = `作品\n${data.title}`;
+                    size = { width: 200, height: 100 };
+                    break;
+                case 'scene':
+                    label = `场景\n${data.title}`;
+                    size = { width: 200, height: 100 };
+                    break;
+                case 'question':
+                    label = `问题\n${data.question}`;
+                    size = { width: 220, height: 80 };
+                    break;
+            }
+
+            const node = graph.addNode({
+                id: nodeId,
+                x: position.x,
+                y: position.y,
+                width: size.width,
+                height: size.height,
+                shape: 'rect',
+                attrs: {
+                    body: {
+                        fill: style.fill,
+                        stroke: style.stroke,
+                        strokeWidth: 2,
+                        rx: 8,
+                        ry: 8,
+                    },
+                    label: {
+                        text: label,
+                        fill: 'white',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        textWrap: {
+                            width: size.width - 20,
+                            height: size.height - 20,
+                            ellipsis: true,
+                        },
+                    },
+                },
+                data: {
+                    type: type,
+                    ...data,
+                },
+            });
+
+            return node;
+        }
+
+        // 创建连接线
+        function createEdge(source, target) {
+            graph.addEdge({
+                source: source.id,
+                target: target.id,
+                attrs: {
+                    line: {
+                        stroke: '#cbd5e1',
+                        strokeWidth: 2,
+                        targetMarker: {
+                            name: 'classic',
+                            size: 8,
+                        },
+                    },
+                },
+                connector: {
+                    name: 'smooth',
+                },
+            });
+        }
+
+        // 自动布局
+        function autoLayout(nodes) {
+            const startX = 100;
+            const startY = 100;
+            const columnGap = 300;
+            const rowGap = 150;
+
+            let currentX = startX;
+            let currentY = startY;
+            let maxHeightInRow = 0;
+            let nodesInRow = 0;
+
+            nodes.forEach((node, index) => {
+                // 每行最多4个节点
+                if (nodesInRow >= 4) {
+                    currentX = startX;
+                    currentY += maxHeightInRow + rowGap;
+                    nodesInRow = 0;
+                    maxHeightInRow = 0;
+                }
+
+                node.position(currentX, currentY);
+
+                const size = node.getSize();
+                maxHeightInRow = Math.max(maxHeightInRow, size.height);
+                currentX += size.width + columnGap;
+                nodesInRow++;
+            });
+        }
+
+        // 发送请求并生成工作流
+        async function generateWorkflow() {
+            const userInput = document.getElementById('userInput').value.trim();
+            if (!userInput) {
+                alert('请输入创作想法');
+                return;
+            }
+
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_URL}/inspire`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_input: userInput,
+                        session_id: currentSessionId,
+                    }),
+                });
+
+                const data = await response.json();
+                console.log('[API Response]', data);
+
+                // 更新会话信息
+                currentSessionId = data.session_id;
+                document.getElementById('sessionId').textContent = data.session_id.substring(0, 8);
+                document.getElementById('turnNumber').textContent = data.turn_number;
+                document.getElementById('stage').textContent = data.state.stage;
+
+                // 生成节点
+                const nodes = [];
+
+                // 1. 用户输入节点
+                const inputNode = createNode('input', {
+                    text: userInput.substring(0, 50) + (userInput.length > 50 ? '...' : ''),
+                }, { x: 0, y: 0 });
+                nodes.push(inputNode);
+
+                // 2. 关键词节点
+                if (data.state.keywords && data.state.keywords.length > 0) {
+                    const keywordNode = createNode('keyword', {
+                        keywords: data.state.keywords,
+                    }, { x: 0, y: 0 });
+                    nodes.push(keywordNode);
+                    createEdge(inputNode, keywordNode);
+                }
+
+                let lastNode = nodes[nodes.length - 1];
+
+                // 3. 理论节点
+                const theories = data.inspirations.filter(item => item.type === 'theory');
+                theories.forEach(theory => {
+                    const node = createNode('theory', theory, { x: 0, y: 0 });
+                    nodes.push(node);
+                    createEdge(lastNode, node);
+                });
+
+                // 4. 作品节点
+                const works = data.inspirations.filter(item => item.type === 'work');
+                works.forEach(work => {
+                    const node = createNode('work', work, { x: 0, y: 0 });
+                    nodes.push(node);
+                    createEdge(lastNode, node);
+                });
+
+                // 5. 视觉场景节点
+                if (data.visual_scenes && data.visual_scenes.length > 0) {
+                    data.visual_scenes.forEach(scene => {
+                        const node = createNode('scene', scene, { x: 0, y: 0 });
+                        nodes.push(node);
+                        createEdge(lastNode, node);
+                    });
+                }
+
+                // 6. 引导问题节点
+                if (data.guiding_questions && data.guiding_questions.length > 0) {
+                    data.guiding_questions.forEach(q => {
+                        const node = createNode('question', q, { x: 0, y: 0 });
+                        nodes.push(node);
+                        createEdge(lastNode, node);
+                    });
+                }
+
+                // 自动布局
+                autoLayout(nodes);
+
+                // 适应画布
+                graph.zoomToFit({ padding: 50, maxScale: 1 });
+
+                // 更新节点数量
+                document.getElementById('nodeCount').textContent = graph.getNodes().length;
+
+            } catch (error) {
+                console.error('[Error]', error);
+                alert('生成失败：' + error.message);
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        // 工具栏功能
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+            graph.zoom(0.2);
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+            graph.zoom(-0.2);
+        });
+
+        document.getElementById('fitBtn').addEventListener('click', () => {
+            graph.zoomToFit({ padding: 50, maxScale: 1 });
+        });
+
+        document.getElementById('centerBtn').addEventListener('click', () => {
+            graph.centerContent();
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (confirm('确定要清空画布吗？')) {
+                graph.clearCells();
+                currentSessionId = null;
+                nodeIdCounter = 0;
+                document.getElementById('sessionId').textContent = '-';
+                document.getElementById('turnNumber').textContent = '0';
+                document.getElementById('stage').textContent = '-';
+                document.getElementById('nodeCount').textContent = '0';
+            }
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', generateWorkflow);
+
+        // 回车发送
+        document.getElementById('userInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generateWorkflow();
+            }
+        });
+
+        // 初始化
+        window.addEventListener('load', () => {
+            initGraph();
+            console.log('[App] Ready');
+        });
+    </script>
+</body>
+</html>

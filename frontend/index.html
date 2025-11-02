@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影理论激发系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-inspire {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-inspire:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-inspire:active {
+            transform: translateY(0);
+        }
+
+        .btn-inspire:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .state-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .state-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .state-title::before {
+            content: "🎬";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .state-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .state-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .state-item-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .state-item-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .inspirations-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "💡";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .inspiration-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .inspiration-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .inspiration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .inspiration-type {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .type-theory {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .type-work {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .inspiration-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .relevance-score {
+            font-size: 0.9em;
+            color: #666;
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .inspiration-content {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #555;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            white-space: pre-line;
+        }
+
+        .inspiration-source {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .examples {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .examples-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .example-item {
+            padding: 8px 15px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .example-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 电影理论激发系统</h1>
+            <p>输入你的创作想法，获取理论指导和作品参考</p>
+        </div>
+
+        <div class="input-section">
+            <label class="input-label">你在创作什么？</label>
+            <textarea
+                id="userInput"
+                class="input-box"
+                placeholder="例如：我在构思一个关于记忆消逝的场景&#10;或：我想拍一个关于时间流逝的镜头&#10;或：如何表现孤独感？"
+            ></textarea>
+            <button id="inspireBtn" class="btn-inspire">获取灵感 ✨</button>
+
+            <div class="examples">
+                <div class="examples-title">💭 试试这些例子：</div>
+                <div class="example-item" onclick="fillExample('我在构思一个关于记忆消逝的场景')">
+                    📝 我在构思一个关于记忆消逝的场景
+                </div>
+                <div class="example-item" onclick="fillExample('如何用镜头语言表现时间流逝？')">
+                    🎥 如何用镜头语言表现时间流逝？
+                </div>
+                <div class="example-item" onclick="fillExample('想拍一个孤独的人物，该用什么构图？')">
+                    🎭 想拍一个孤独的人物，该用什么构图？
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: white; font-size: 1.1em;">正在为你寻找灵感...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results" id="results">
+            <div class="state-card">
+                <div class="state-title">你的创作状态</div>
+                <div class="state-info" id="stateInfo"></div>
+            </div>
+
+            <div class="inspirations-section">
+                <div class="section-title">相关灵感</div>
+                <div id="inspirationsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        function fillExample(text) {
+            document.getElementById('userInput').value = text;
+        }
+
+        document.getElementById('inspireBtn').addEventListener('click', async () => {
+            const userInput = document.getElementById('userInput').value.trim();
+
+            if (!userInput) {
+                alert('请输入你的创作想法');
+                return;
+            }
+
+            // 显示加载状态
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('error').classList.remove('active');
+            document.getElementById('inspireBtn').disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/inspire`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_input: userInput
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`服务器错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                const errorEl = document.getElementById('error');
+                errorEl.textContent = `出错了：${error.message}\n\n请确保后端服务器正在运行（http://localhost:8000）`;
+                errorEl.classList.add('active');
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('inspireBtn').disabled = false;
+            }
+        });
+
+        function displayResults(data) {
+            // 显示状态信息
+            const stateInfo = document.getElementById('stateInfo');
+            const state = data.state;
+
+            stateInfo.innerHTML = `
+                <div class="state-item">
+                    <div class="state-item-label">创作阶段</div>
+                    <div class="state-item-value">${state.stage}</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-item-label">关键词</div>
+                    <div class="state-item-value">${state.keywords.join(', ')}</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-item-label">结构维度</div>
+                    <div class="state-item-value">${state.structure_dimension}</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-item-label">进度</div>
+                    <div class="state-item-value">${(state.progress * 100).toFixed(0)}%</div>
+                </div>
+            `;
+
+            // 显示灵感列表
+            const inspirationsList = document.getElementById('inspirationsList');
+            if (data.inspirations.length === 0) {
+                inspirationsList.innerHTML = '<p style="color: #999;">暂时没有找到相关灵感，试试换个关键词？</p>';
+            } else {
+                inspirationsList.innerHTML = data.inspirations.map(insp => `
+                    <div class="inspiration-card">
+                        <div class="inspiration-type type-${insp.type}">
+                            ${insp.type === 'theory' ? '📚 理论' : '🎬 作品'}
+                        </div>
+                        <div class="inspiration-header">
+                            <div class="inspiration-title">${insp.title}</div>
+                            <div class="relevance-score">相关度: ${(insp.relevance_score * 100).toFixed(0)}%</div>
+                        </div>
+                        <div class="inspiration-content">${insp.content}</div>
+                        <div class="inspiration-source">来源: ${insp.source}</div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('results').classList.add('active');
+
+            // 滚动到结果
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 支持回车键提交
+        document.getElementById('userInput').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('inspireBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>
